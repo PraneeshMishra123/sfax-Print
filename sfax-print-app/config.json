@@ -1,0 +1,6 @@
+{
+  "server": "https://sfax-8pvi.onrender.com",
+  "escrowFingerprint": "d890 ba89 b928 9c24 aa1c 018d 0ee8 743a",
+  "allowedPrinters": [],
+  "layout": { "cols": 76, "rows": 60 }
+}
