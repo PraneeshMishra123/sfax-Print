@@ -1,0 +1,30 @@
+// Run: node test/unit.js
+const assert = require('assert'), L = require('../lib/layout'), P = require('../lib/printers');
+const d = { to: 'Priya', message: 'Dear Priya,\n\nThank you for always listening this year. It meant a great deal to me and I wanted to say so in person, but a letter will do for now.\n\nRahul', senderEmail: 'rahul@example.com', receiverEmail: 'priya@example.com', senderAddress: '8-2-120, Park Lane, Banjara Hills, Hyderabad, Telangana 500034', toAddress: '12-4-56, Gandhi Road, Ameerpet, Hyderabad, Telangana 500016' };
+const s = L.buildSheets(d, { name: 'Rahul', code: '500016', at: Date.now() }, { cols: 76, rows: 60 });
+assert.strictEqual(s.length, 3, '3 sheets');
+for (const sh of s) for (const line of sh.split('\n')) assert(line.length <= 76, 'line too long: ' + line);
+const l1 = s[0].split('\n');
+assert.strictEqual(l1.length, 60, 'sheet 1 fills the page');
+assert(/TO \(RECEIVER\).*FROM \(SENDER\)/.test(l1.join('\n')), 'receiver left, sender right');
+assert(l1.findIndex(x => x.includes('ACKNOWLEDGMENT')) > l1.findIndex(x => x.includes('FROM (SENDER)')), 'acknowledgment below');
+assert(/^(- )+/.test(l1[l1.findIndex(x => x.includes('ACKNOWLEDGMENT')) - 2]), 'dotted tear line above acknowledgment');
+assert(/Post Officer Sign\s+Receiver Sign/.test(l1[l1.length - 1]), 'signature labels at the bottom');
+assert(!s[0].includes('Thank you for always'), 'message not on sheet 1');
+assert(s[1].includes('Thank you for always') && s[1].includes('Rahul'), 'message on sheet 2');
+assert.strictEqual(s[2].trim(), '', 'sheet 3 blank');
+assert(!/[^\x20-\x7E\n]/.test(L.clean('caf\u00e9 \u2019quote\u2019 \u0c24\u0c46')), 'ASCII only');
+const pr = (n, x = {}) => ({ name: n, ...x });
+for (const ok of ['EPSON LX-310 ESC/P', 'Epson FX-890', 'TVS MSP 250 Star', 'Generic / Text Only', 'My Dot Matrix']) assert(P.allowed(pr(ok)), ok + ' should be allowed');
+for (const no of ['HP LaserJet Pro M404', 'Canon PIXMA G3000', 'Microsoft Print to PDF', 'Brother HL-L2350DW']) assert(!P.allowed(pr(no)), no + ' should be blocked');
+assert(!s[0].includes('undefined'), 'no undefined on sheet 1');
+assert(s[0].includes('Post office PIN: 500016'), 'receiver post office PIN printed');
+// encryption round trip (same format the website uses)
+const C = require('../lib/crypto'), K = require('../lib/core');
+(async () => {
+  const k = await C.genKeys(), payload = JSON.stringify({ to: 'Priya', message: 'Hello' });
+  const enc = await C.seal(k.publicKey, Buffer.from(payload), '500016');
+  assert.deepStrictEqual(await K.decrypt(k.privateKey, { enc, code: '500016' }), { to: 'Priya', message: 'Hello' }, 'round trip');
+  await assert.rejects(K.decrypt(k.privateKey, { enc, code: '999999' }), 'wrong post office code must fail');
+  console.log('unit tests passed');
+})();

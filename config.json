@@ -1,0 +1,6 @@
+{
+  "server": "https://sfax-lvsn.onrender.com",
+  "escrowFingerprint": "0721 2a09 ad7f 70e3 03c0 0f59 b3ac a73c",
+  "allowedPrinters": [],
+  "layout": { "cols": 76, "rows": 60 }
+}

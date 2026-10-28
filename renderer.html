@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self'">
+<title>SFAX Print</title><link rel="stylesheet" href="renderer.css"></head>
+<body>
+<div id="vLogin" class="center"><div class="card">
+  <span class="badge">Post Office</span><h1>SFAX Print</h1>
+  <label for="pin">Post office PIN</label><input id="pin" inputmode="numeric" maxlength="10">
+  <label for="pw">Password</label><input id="pw" type="password">
+  <label class="chk"><input id="create" type="checkbox"> First time: create this post office account</label>
+  <div class="err" id="eLogin"></div><button class="btn" id="bLogin">Login</button>
+  <p class="mute" id="diag" style="margin-top:16px"></p>
+</div></div>
+<div id="vSetup" class="center hide"><div class="card">
+  <h1>Set up this computer</h1>
+  <p class="mute">This creates the secret key that opens messages. It stays on this computer, protected by Windows. An encrypted backup goes to the SFAX owner for recovery.</p>
+  <button class="btn" id="bSetup">Create key on this computer</button>
+  <p class="mute" style="margin-top:22px">Already have a key file? Use the file exported from your other computer, or the recovery file sent by the SFAX owner:</p>
+  <label for="rp">Key file passphrase</label><input id="rp" type="password">
+  <button class="btn lt" id="bRecover">Choose key file</button>
+  <div class="err" id="eSetup"></div><div class="ok" id="oSetup"></div>
+</div></div>
+<div id="vMain" class="hide">
+  <header><b id="hTitle">SFAX Print</b><span><select id="sel"></select> <button class="btn sm lt" id="bOut">Logout</button></span></header>
+  <div class="note" id="note"></div>
+  <main><table><thead><tr><th>From</th><th>Post office</th><th>Sealed</th><th>Status</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+  <div class="mute" id="empty"></div>
+  <details style="margin-top:24px"><summary>Use this post office on another computer</summary>
+    <p class="mute">Create a key file here, copy it to the other computer, install SFAX Print there, login, and choose "Choose key file". Anyone with the file and passphrase can open this post office's messages, so keep both safe.</p>
+    <label for="xp" class="mute">Passphrase for the key file (8+ characters)</label><input id="xp" type="password" style="max-width:320px">
+    <button class="btn sm" id="bExport" style="margin-top:10px">Create key file</button> <span class="mute" id="xmsg"></span>
+  </details></main>
+</div>
+<div class="toast hide" id="toast"></div>
+<script src="renderer.js"></script>
+</body></html>

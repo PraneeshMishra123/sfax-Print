@@ -1,0 +1,45 @@
+{
+  "name": "sfax-print",
+  "version": "1.0.1",
+  "description": "SFAX Print - decrypts and prints messages for post offices",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node test/unit.js",
+    "dist": "electron-builder --win nsis"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.0"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "in.sfax.print",
+    "productName": "SFAX Print",
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer.*",
+      "config.json",
+      "lib/**"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "PraneeshMishra123",
+        "repo": "sfax-print"
+      }
+    ],
+    "nsis": {
+      "artifactName": "SFAX-Print-Setup.${ext}"
+    }
+  },
+  "allowScripts": {
+    "electron@33.4.11": true
+  }
+}
