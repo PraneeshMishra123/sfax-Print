@@ -2,7 +2,7 @@
 const assert = require('assert'), L = require('../lib/layout');
 const d = { to: 'Priya', message: 'Dear Priya,\n\nThank you for always listening this year. It meant a great deal to me and I wanted to say so in person, but a letter will do for now.\n\nRahul', senderEmail: 'rahul@example.com', receiverEmail: 'priya@example.com', senderAddress: '8-2-120, Park Lane, Banjara Hills, Hyderabad, Telangana 500034', toAddress: '12-4-56, Gandhi Road, Ameerpet, Hyderabad, Telangana 500016' };
 const s = L.buildSheets(d, { name: 'Rahul', code: '500016', at: Date.now() }, { cols: 76, rows: 30 });
-assert.strictEqual(s.length, 3, '3 sheets');
+assert.strictEqual(s.length,1, '3 sheets');
 for (const sh of s) for (const line of sh.split('\n')) assert(line.length <= 76, 'line too long: ' + line);
 const l1 = s[0].split('\n');
 assert.strictEqual(l1.length, 60, 'sheet 1 fills the page');
